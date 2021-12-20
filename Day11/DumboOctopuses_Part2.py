@@ -2,7 +2,6 @@ class Octopi:
     def __init__(self, line):
         self.line = line
         self.flashed = [[False for _ in range(10)] for _ in range(10)]
-        self.numberFlashed = 0
 
     def tick(self):
         for line in self.line:
@@ -10,7 +9,6 @@ class Octopi:
                 line[idx] += 1
         
         self.check_flash()
-        self.clear_flashed()
 
     def check_flash(self):
         for lindex, line in enumerate(self.line):
@@ -19,7 +17,6 @@ class Octopi:
                     self.flash([lindex, idx])
 
     def flash(self, coord):
-        self.numberFlashed += 1
         self.flashed[coord[0]][coord[1]] = True
         self.line[coord[0]][coord[1]] = 0
         directions = self.get_directions(coord)
@@ -57,6 +54,16 @@ class Octopi:
     def clear_flashed(self):
         self.flashed = [[False for _ in range(10)] for _ in range(10)]
 
+    def check_simultaneous(self) -> bool:
+        simultaneous = True
+        for line in self.flashed:
+            for octopi in line:
+                if not (octopi):
+                    simultaneous = False
+        
+        return simultaneous
+
+
     def print_line(self, number):
         if number == 0:
             print("Octopi Line:")
@@ -73,8 +80,13 @@ if __name__ == '__main__':
         lines = f.read().splitlines()
     
     octopiGrid = Octopi([[int(x) for x in line] for line in lines])
-    
-    for y in range(100):
+    answer = 0
+    while True:
+        answer += 1
         octopiGrid.tick()
+        if octopiGrid.check_simultaneous():
+            break
+        octopiGrid.clear_flashed()
+        
 
-    print(str(octopiGrid.numberFlashed) + " octopi flashed.")    
+    print("Step " + str(answer) + " was the first simultaneous flash.")    
