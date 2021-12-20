@@ -88,5 +88,4 @@ if __name__ == '__main__':
             break
         octopiGrid.clear_flashed()
         
-
     print("Step " + str(answer) + " was the first simultaneous flash.")    
